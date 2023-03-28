@@ -1,4 +1,6 @@
 const {db} = require('../config/dbconnect');
+const {query} = require("express");
+const {values} = require("pg/lib/native/query");
 
 
 // [GET] - /users
@@ -31,7 +33,8 @@ const getUserById = (req, res) =>{
             });
         }
     });
-}
+};
+
 
 
 //[POST] - /users/register
@@ -58,8 +61,86 @@ const register = (req, res) =>{
 };
 
 
+//PUT - /users/:id
+const updateUser = (req, res) =>{
+    const {username, password , first_name, last_name, telephone, address} = req.body;
+    if(Object.keys(req.body).length !== 0){
+        let Set ='';
+        let count =0;
+        if(username !== undefined){
+            if(count===0){
+                count++;
+            }else{
+                Set +=',';
+            }
+            Set += `username = '${username}'`;
+        }
+        if(password !==undefined){
+            if(count===0){
+                count++;
+            }else{
+                Set +=',';
+            }
+            Set += `password = '${password}'`;
+        }
+        if(first_name !== undefined){
+            if(count===0){
+                count++;
+            }else{
+                Set +=',';
+            }
+            Set += `first_name = '${first_name}'`;
+        }
+        if(last_name !==undefined){
+            if(count===0){
+                count++;
+            }else{
+                Set +=',';
+            }
+            Set += `last_name = '${last_name}'`;
+        }
+        if(telephone !==undefined){
+            if(count===0){
+                count++;
+            }else{
+                Set +=',';
+            }
+            Set += `telephone = '${telephone}'`;
+        }
+        if(address !==undefined){
+            if(count===0){
+                count++;
+            }else{
+                Set +=',';
+            }
+            Set += `address = '${address}'`;
+        }
+
+        let query = `Update "user" Set ${Set} Where id =${req.id} Returning *`;
+        console.log(query);
+        db.query(query,(err, result)=>{
+            if(!err){
+                res.send(result.rows);
+            }else{
+                return res.json({
+                    success: false,
+                    mess: 'Fail To Update!!!'
+                });
+            }
+        });
+
+    }else{
+        return res.status(400).json({
+            success:false,
+            mess: 'Missing Input'
+        });
+    };
+};
+
+//DELETE - /users/:id
 
 module.exports ={
+    updateUser,
     getAllUsers,
     getUserById,
     register

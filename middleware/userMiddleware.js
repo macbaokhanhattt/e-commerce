@@ -1,9 +1,11 @@
 const {checkValidId} = require('../helpers/usersHelpers');
 ///Param :id
 
-const idParam = (req, res, next ,id) =>{
+const idParam = async (req, res, next ,id) => {
     const ID = Number(id);
-    if(checkValidId(ID)){
+    const bool = await checkValidId(ID);
+
+    if( bool=== true){
         req.id = ID;
         next();
     }else{
@@ -12,8 +14,7 @@ const idParam = (req, res, next ,id) =>{
             mess: 'Invalid Id'
         });
     };
-};
-
+}
 
 
 

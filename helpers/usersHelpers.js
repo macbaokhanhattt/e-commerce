@@ -1,16 +1,24 @@
 const {db} = require('../config/dbconnect');
 
-const checkValidId = (id) => {
-    let query = `Select id from "user" Where id = $1`;
+
+
+const checkValidId = async (id) => {
+    let query = `SELECT id FROM "user" WHERE id = $1`;
     let values = [id];
-    db.query(query, values, (err, result)=>{
-        if(result.rows.length >0){
+
+    try {
+        const result =  await db.query(query, values);
+        if (result.rows.length > 0) {
             return true;
-        }else{
+        } else {
             return false;
-        };
-    });
+        }
+    } catch (err) {
+        console.error(err);
+        return false;
+    }
 };
+
 
 module.exports = {
     checkValidId

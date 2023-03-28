@@ -1,7 +1,9 @@
 const {Pool} = require('pg');
 require('jsonwebtoken');
 
-const db = new Pool({
+const db = new Pool(
+
+    {
    host:"localhost",
    user:"postgres",
    port:5432,

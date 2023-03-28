@@ -138,8 +138,23 @@ const updateUser = (req, res) =>{
 };
 
 //DELETE - /users/:id
+const deleteUser = (req,res) =>{
+    let query = `Delete From "user" Where id = ${req.id} Returning *`;
+    db.query(query,(err, result)=>{
+        if(!err){
+            res.send(result.rows);
+        }else{
+            return res.json({
+                success: false,
+                mess: 'Fail To Delete!!!'
+            });
+        }
+    });
+
+}
 
 module.exports ={
+    deleteUser,
     updateUser,
     getAllUsers,
     getUserById,
